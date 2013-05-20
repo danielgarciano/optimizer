@@ -1,4 +1,4 @@
 optimizer
 =========
 
-Stock Portfolio Optimizer
+Portfolio optimizer
