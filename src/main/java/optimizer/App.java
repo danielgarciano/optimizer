@@ -21,22 +21,21 @@ public class App {
         Date startDate = null;
         Date endDate = null;
         try {
-            startDate = dateFormatter.parse("2012-05-19");
-            endDate = dateFormatter.parse("2013-05-19");
+            startDate = dateFormatter.parse("2012-04-20");
+            endDate = dateFormatter.parse("2013-04-20");
         } catch (ParseException ex) {
 
         }
-        if (dataSource.querySymbol("CSCO", startDate, endDate)) {
-            StockSymbol stockSymbol = new StockSymbol(dataSource);
-            List<Float> dailyReturns = stockSymbol.getDailyReturns();
-            List<Date> dates = stockSymbol.getDates();
-            int i = 0;
-            for (Float dailyReturn: dailyReturns) {
-                System.out.println(dateFormatter.format(dates.get(i)));
-                System.out.println(dailyReturn);
-                i++;
+
+        List<String> symbols = new ArrayList<String>();
+        symbols.add("TLT");
+
+        for (String symbol: symbols) {
+            if (dataSource.querySymbol(symbol, startDate, endDate)) {
+                StockSymbol stockSymbol = new StockSymbol(dataSource);
+                System.out.print(stockSymbol.getSymbol() + " : ");
+                System.out.println(stockSymbol.getSharpeRatio());
             }
-            System.out.println(stockSymbol.averageDailyReturn());
         }
     }
 }

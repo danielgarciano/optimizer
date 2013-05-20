@@ -14,7 +14,7 @@ import java.text.SimpleDateFormat;
 public class YahooFinanceDataSource implements FinanceDataSource {
 
     private String symbol;
-    private List<Float> adjClose;
+    private List<Double> adjClose;
     private List<Integer> volume;
     private List<Date> dates;
     private String baseUrl = "http://ichart.finance.yahoo.com/table.csv";
@@ -25,7 +25,7 @@ public class YahooFinanceDataSource implements FinanceDataSource {
     public Boolean querySymbol(String symbol, Date startDate, Date endDate) {
 
         this.symbol = symbol;
-        this.adjClose = new ArrayList<Float>();
+        this.adjClose = new ArrayList<Double>();
         this.volume = new ArrayList<Integer>();
         this.dates = new ArrayList<Date>();
 
@@ -94,7 +94,7 @@ public class YahooFinanceDataSource implements FinanceDataSource {
                     dates.add(dateElement);
                     Integer volumeElement = Integer.parseInt(dailyRecord.get(volumeIndex));
                     volume.add(volumeElement);
-                    Float adjCloseElement = Float.parseFloat(dailyRecord.get(adjCloseIndex));
+                    Double adjCloseElement = Double.parseDouble(dailyRecord.get(adjCloseIndex));
                     adjClose.add(adjCloseElement);
                 }
             }
@@ -118,7 +118,7 @@ public class YahooFinanceDataSource implements FinanceDataSource {
     }
 
     @Override
-    public List<Float> getAdjClose() {
+    public List<Double> getAdjClose() {
         return adjClose;
     }
 
