@@ -1,6 +1,7 @@
 package optimizer;
 
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
+
 import java.util.Date;
 import java.util.List;
 
@@ -60,19 +61,58 @@ public class StockSymbol {
         return dailyReturns;
     }
 
-    private Double calculateAverageDailyReturn() {
-        Double sum = new Double(0);
-        for (Double dailyReturn: this.dailyReturns) {
+    private Double calculateAverageDailyReturn(double[] dailyReturns) {
+        double sum = 0;
+        for (double dailyReturn: dailyReturns) {
             sum += dailyReturn;
         }
-        return sum / this.dailyReturns.length;
+        return sum / dailyReturns.length;
+    }
+
+    private Double calculateSharpeRatio(double[] dailyReturns) {
+        Double avgDailyReturn = calculateAverageDailyReturn(dailyReturns);
+        StandardDeviation stdDev = new StandardDeviation();
+        Double stdDevDailyReturn = stdDev.evaluate(dailyReturns);
+        return Math.sqrt(dailyReturns.length) * (avgDailyReturn/stdDevDailyReturn);
+    }
+
+    private Double calculateReturn(List<Double> adjClose) {
+        double start = adjClose.get(0);
+        double end = adjClose.get(adjClose.size() - 1);
+        return ((end / start) - 1) * 100;
     }
 
     public Double getSharpeRatio() {
-        Double avgDailyReturn = calculateAverageDailyReturn();
-        StandardDeviation stdDev = new StandardDeviation();
-        Double stdDevDailyReturn = stdDev.evaluate(this.dailyReturns);
-        return Math.sqrt(this.dailyReturns.length) * (avgDailyReturn/stdDevDailyReturn);
+        return this.calculateSharpeRatio(this.dailyReturns);
+    }
+
+    private double[] getDailyReturnsByDays(Integer days) {
+        double[] dailyReturnsDays = new double[days];
+        int start = this.dailyReturns.length - days;
+        int j = 0;
+        for (int i = start; i < this.dailyReturns.length; i++) {
+            dailyReturnsDays[j] = this.dailyReturns[i];
+            j++;
+        }
+        return dailyReturnsDays;
+    }
+
+    private List<Double> getAdjCloseByDays(Integer days) {
+        int start = this.adjClose.size() - days;
+        int end =  this.adjClose.size();
+        return this.adjClose.subList(start, end);
+    }
+
+    public Double getSharpeRatio(Integer days) {
+        return this.calculateSharpeRatio(getDailyReturnsByDays(days));
+    }
+
+    public Double getReturn() {
+        return this.calculateReturn(this.adjClose);
+    }
+
+    public Double getReturn(Integer days) {
+        return this.calculateReturn(getAdjCloseByDays(days));
     }
 
 }

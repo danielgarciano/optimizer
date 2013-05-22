@@ -21,20 +21,24 @@ public class App {
         Date startDate = null;
         Date endDate = null;
         try {
-            startDate = dateFormatter.parse("2012-04-20");
-            endDate = dateFormatter.parse("2013-04-20");
+            startDate = dateFormatter.parse("2012-05-21");
+            endDate = dateFormatter.parse("2013-05-21");
         } catch (ParseException ex) {
 
         }
 
         List<String> symbols = new ArrayList<String>();
         symbols.add("TLT");
+        symbols.add("SPY");
 
         for (String symbol: symbols) {
             if (dataSource.querySymbol(symbol, startDate, endDate)) {
                 StockSymbol stockSymbol = new StockSymbol(dataSource);
-                System.out.print(stockSymbol.getSymbol() + " : ");
-                System.out.println(stockSymbol.getSharpeRatio());
+                System.out.println(stockSymbol.getSymbol() + " : ");
+                System.out.print("[1 year] Sharpe " +stockSymbol.getSharpeRatio() + " Return " + stockSymbol.getReturn() + " : ");
+                System.out.println("[6 months] Sharpe " + stockSymbol.getSharpeRatio(126) + " Return " + stockSymbol.getReturn(126));
+                System.out.print("[3 months] Sharpe " + stockSymbol.getSharpeRatio(63) + " Return " + stockSymbol.getReturn(63) + " : ");
+                System.out.println("[1 month] Sharpe " + stockSymbol.getSharpeRatio(21) + " Return " + stockSymbol.getReturn(21));
             }
         }
     }
